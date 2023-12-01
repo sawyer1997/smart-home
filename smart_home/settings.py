@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'customer.apps.CustomerConfig',
+    'device.apps.DeviceConfig',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +78,13 @@ WSGI_APPLICATION = 'smart_home.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        "PORT": os.getenv("RDS_PORT"),
+        "USER": os.getenv("RDS_USERNAME"),
+        "HOST": os.getenv("RDS_HOSTNAME"),
+        "NAME": os.getenv("RDS_DB_NAME"),
+        "PASSWORD": os.getenv("RDS_PASSWORD"),
+        "ENGINE": "django.db.backends.postgresql",
+        "TEST": {"NAME": "testdatabase2"},
     }
 }
 
