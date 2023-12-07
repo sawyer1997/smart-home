@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
-    <div class="container">
-        <div class="col-8">
-            <h1 class="fw-bold">Welcome to Smart Home Portal!</h1>
-            <p>SHP will help you track down your smart devices energy usages</p>
-        </div>
-    </div>
-{% endblock content %}
+    <h1>Hello Smart Home</h1>
+    {% if user.is_authenticated %}
+        <a href="{% url 'customer:logout' %}" class="btn btn-danger">Logout</a>
+    {% else %}
+        <a href="{% url 'customer:login' %}" class="btn btn-success">Login</a>
+        <a href="{% url 'customer:signup' %}" class="btn btn-primary">Sign Up</a>
+    {% endif %}
+{% endblock %}
+
+
+>>>>>>> da693c3 (write anything)
