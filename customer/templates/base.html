@@ -29,7 +29,7 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'customer:home_page' %}">Home
+                            <a class="nav-link active" href="{% url 'customer:home_page' %}">SmartHome
                                 <span class="visually-hidden">(current)</span>
                             </a>
                         </li>
@@ -37,7 +37,7 @@
                             <a class="nav-link" href="#">Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Log Out</a>
+                            <a class="nav-link" href="{% url 'customer:logout' %}">Log Out</a>
                         </li>
                     </ul>
                 </div>
@@ -52,12 +52,12 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'customer:home_page' %}">Home
+                            <a class="nav-link active" href="{% url 'customer:home_page' %}">SmartHome
                                 <span class="visually-hidden">(current)</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Log In</a>
+                            <a class="nav-link" href="{% url 'customer:login' %}">Log In</a>
                         </li>
                     </ul>
                 </div>

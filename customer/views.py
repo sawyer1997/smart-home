@@ -30,6 +30,7 @@ def custom_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                messages.success(request, "You have successfully logged in")
                 return redirect('customer:home_page')
             else:
                 messages.error(request, "Your account is inactive.")
@@ -41,7 +42,7 @@ def custom_login(request):
 
 def custom_logout(request):
     logout(request)
-    messages.info(request, "You have successfully logged out.")
+    messages.success(request, "You have successfully logged out.")
     return redirect('customer:login')
 
 
