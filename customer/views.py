@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 def signup(request):
@@ -48,3 +49,13 @@ def custom_logout(request):
 
 def get_home_page(request):
     return render(request, 'home.html', {})
+
+
+@login_required
+def view_profile(request):
+    context = {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'email': request.user.email
+    }
+    return render(request, 'profile_view.html', context)
