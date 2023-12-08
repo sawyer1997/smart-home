@@ -3,11 +3,5 @@
 
 {% block content %}
     <h1>Hello Smart Home</h1>
-    {% if user.is_authenticated %}
-        <a href="{% url 'customer:logout' %}" class="btn btn-danger">Logout</a>
-    {% else %}
-        <a href="{% url 'customer:login' %}" class="btn btn-success">Login</a>
-        <a href="{% url 'customer:signup' %}" class="btn btn-primary">Sign Up</a>
-    {% endif %}
 {% endblock content %}
 
