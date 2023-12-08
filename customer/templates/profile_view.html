@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'customer/css/profile_page.css' %}">
+{% endblock styles %}
 {% block content %}
 <div class="container rounded bg-white mt-5 mb-5">
     <div class="row">

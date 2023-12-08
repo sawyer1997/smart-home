@@ -17,7 +17,8 @@
         rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="{% static 'home/css/bootstrap.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'customer/css/profile_page.css' %}">
+    {% block styles %}
+    {% endblock styles %}
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
 </head>
 <body>
@@ -69,7 +70,7 @@
     </header>
 
     <br>
-    <div class = "container">
+    <div class="container">
         {% if messages %}
             {% for message in messages %}
                 {% if message.tags == "success" %}
