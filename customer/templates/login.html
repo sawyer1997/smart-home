@@ -2,21 +2,27 @@
 {% load static %}
 {% block content %}
 <div class="container mt-5">
-    <h2>Login</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="id_username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="id_username" name="username" placeholder="Username" required>
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <h2>Login</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="id_username" name="username" placeholder="Username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="id_password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="id_password" name="password" placeholder="Password" required>
+                </div>
+                <div class="text-center">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            </form>
+            <p class="mt-3">
+                Don't have an account? <a href="{% url 'customer:signup' %}">Sign up</a>
+            </p>
         </div>
-        <div class="mb-3">
-            <label for="id_password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="id_password" name="password" placeholder="Password" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    <p class="mt-3">
-        Don't have an account? <a href="{% url 'customer:signup' %}">Sign up</a>
-    </p>
+    </div>
 </div>
 {% endblock content%}
