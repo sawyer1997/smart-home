@@ -3,11 +3,11 @@
 {% block content %}
 <div class="container mt-5">
     <h2>Logout</h2>
-    <p>Are you sure you want to logout?</p>
+    <p>Are you sure you want to log out?</p>
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">Logout</button>
     </form>
     <a href="{% url 'customer:home' %}" class="btn btn-secondary">Cancel</a>
 </div>
-{% endblock %}
+{% endblock content %}

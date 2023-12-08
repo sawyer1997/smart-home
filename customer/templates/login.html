@@ -1,18 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
 <div class="container mt-5">
     <h2>Login</h2>
-
-    {% if messages %}
-    <div>
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
-
     <form method="post">
         {% csrf_token %}
         <div class="mb-3">
@@ -29,4 +19,4 @@
         Don't have an account? <a href="{% url 'customer:signup' %}">Sign up</a>
     </p>
 </div>
-{% endblock %}
+{% endblock content%}

@@ -20,6 +20,7 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
+
 def custom_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -36,6 +37,7 @@ def custom_login(request):
             messages.error(request, "Invalid username or password.")
 
     return render(request, 'login.html')
+
 
 def custom_logout(request):
     logout(request)

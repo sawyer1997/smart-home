@@ -2,12 +2,18 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+
 class SignUpForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=True, help_text='Required.')
-    last_name = forms.CharField(max_length=30, required=True, help_text='Required.')
     email = forms.EmailField(max_length=254, help_text='Required. Please enter a valid email address.')
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
-        fields_order = ('first_name', 'last_name','username','email', 'password1', 'password2')
+        labels = {
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+        }
+        fields = ('first_name', 'last_name', 'email', 'username', 'password1', 'password2')
+        help_texts = {
+            'first_name': 'Required',
+            'last_name': 'Required'
+        }
