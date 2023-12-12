@@ -1,0 +1,53 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block content %}
+    <h2>Bar Chart</h2>
+    <div class="col-5">
+        <canvas id="barChart" width="200" height="100"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('barChart').getContext('2d');
+        {% if x_axis and y_axis %}
+            var chartOptions = {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: '{{ x_axis }}'  // Display x-axis name
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: '{{ y_axis }}' // Display y-axis name
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        {% else %}
+            var chartOptions = {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        {% endif %}
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ labels|safe }},
+                datasets: [{
+                    label: 'Values',
+                    data: {{ values|safe }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: chartOptions
+        });
+    </script>
+{% endblock content %}

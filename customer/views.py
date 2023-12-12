@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
+import random
+
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm, ServiceLocationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import ServiceLocation
+from django.views.decorators.http import require_http_methods
+from django.urls import reverse
+
 
 def signup(request):
     if request.method == 'POST':
@@ -19,7 +25,7 @@ def signup(request):
             return redirect('customer:home_page')
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'customer/signup.html', {'form': form})
 
 
 def custom_login(request):
@@ -38,9 +44,10 @@ def custom_login(request):
         else:
             messages.error(request, "Invalid username or password.")
 
-    return render(request, 'login.html')
+    return render(request, 'customer/login.html')
 
 
+@login_required
 def custom_logout(request):
     logout(request)
     messages.success(request, "You have successfully logged out.")
@@ -48,7 +55,7 @@ def custom_logout(request):
 
 
 def get_home_page(request):
-    return render(request, 'home.html', {})
+    return render(request, 'customer/home.html', {})
 
 
 @login_required
@@ -58,14 +65,17 @@ def view_profile(request):
         'last_name': request.user.last_name,
         'email': request.user.email
     }
-    return render(request, 'profile_view.html', context)
+    return render(request, 'customer/profile_view.html', context)
 
+
+@login_required
 def service_locations(request):
     locations = ServiceLocation.objects.filter(
         user=request.user,
         is_active=True,
         )
-    return render(request, 'service_locations.html', {'locations': locations})
+    return render(request, 'customer/service_locations.html', {'locations': locations})
+
 
 @login_required
 def add_service_location(request):
@@ -78,7 +88,8 @@ def add_service_location(request):
             return redirect('customer:service_locations')
     else:
         form = ServiceLocationForm()
-    return render(request, 'add_service_location.html', {'form': form})
+    return render(request, 'customer/add_service_location.html', {'form': form})
+
 
 @login_required
 def delete_service_location(request, location_id):
@@ -88,4 +99,14 @@ def delete_service_location(request, location_id):
         location.save()
         messages.success(request, 'Service location is deleted.')
         return redirect('customer:service_locations')
-    return render(request, 'delete_service_location.html', {'location': location})
+    return render(request, 'customer/delete_service_location.html', {'location': location})
+
+
+@login_required
+def get_random_chart(request):
+    return render(request, 'customer/show_chart.html', context={
+        'x_axis': 'Some random X axis',
+        'y_axis': 'Some random Y axis',
+        'labels': [random.randint(1, 10) for _ in range(10)],
+        'values': [random.randint(10, 100) for _ in range(10)]
+    })

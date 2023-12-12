@@ -11,4 +11,5 @@ urlpatterns = [
     path('service_locations/', views.service_locations, name='service_locations'),
     path('add_service_location/', views.add_service_location, name='add_service_location'),
     path('delete_service_location/<int:location_id>/', views.delete_service_location, name='delete_service_location'),
+    path('random_chart/', views.get_random_chart, name='random_chart'),
 ]
