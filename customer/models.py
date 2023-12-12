@@ -49,6 +49,9 @@ class ServiceLocation(models.Model):
     occupants = models.IntegerField(
         verbose_name='No of occupants',
     )
+    is_active = models.BooleanField(
+        default=True
+    )
 
     def __str__(self):
         return f'{self.street}_{self.zipcode}_{self.state}_{self.id}'
