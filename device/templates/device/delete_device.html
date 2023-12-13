@@ -1,0 +1,9 @@
+{% extends 'customer/base.html' %}
+{% block content %}
+  <h2>Delete Device</h2>
+  <p>Are you sure you want to delete {{ enrolled_device.device_model }} from {{ enrolled_device.location }}?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Delete</button>
+  </form>
+{% endblock %}
