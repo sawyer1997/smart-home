@@ -23,9 +23,32 @@
         <p><strong>Square Footage:</strong> {{ location.area }}</p>
         <p><strong>No. of Bedrooms:</strong> {{ location.bedroom }}</p>
         <p><strong>No. of Occupants:</strong> {{ location.occupants }}</p>
+
+        <!-- Add Devices Button -->
+        <form action="{% url 'device:add_device' location.id %}" method="get">
+          <button type="submit">Add Devices</button>
+        </form>
+
+        <!-- List of Enrolled Devices -->
+        <ul>
+          {% for device in location.enrolleddevice_set.all %}
+            <li>
+              {{ device.device_model.model_name }} - {{ device.device_model.device_type }}
+              <!-- Delete Device Form -->
+              <form action="{% url 'device:delete_device' device.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this device?');">
+                {% csrf_token %}
+                <button type="submit">Delete Device</button>
+              </form>
+            </li>
+          {% empty %}
+            <li>No devices enrolled yet.</li>
+          {% endfor %}
+        </ul>
+
+        <!-- Delete Service Location Form -->
         <form action="{% url 'customer:delete_service_location' location.id %}" method="post" onsubmit="return confirmDelete();">
           {% csrf_token %}
-          <button type="submit">Delete</button>
+          <button type="submit">Delete Service Location</button>
         </form>
       </div>
     {% empty %}

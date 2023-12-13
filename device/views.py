@@ -1,10 +1,13 @@
 from datetime import datetime, timezone
 
-from django.shortcuts import render
+
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from .models import Notification, ModelEvent, EnrolledDevice
+from .models import Notification, ModelEvent, EnrolledDevice,ServiceLocation, DeviceModel
 from .constants import EventType
+from .forms import EnrolledDeviceForm
+from django.contrib import messages
 
 
 @require_http_methods(['GET'])
@@ -44,3 +47,30 @@ def show_device_eusage(request, device_id):
     }
     print(f'{context = }')
     return render(request, "customer/show_chart.html", context)
+
+@login_required
+# views.py
+
+def add_device(request, location_id):
+    location = get_object_or_404(ServiceLocation, pk=location_id, user=request.user)
+    if request.method == 'POST':
+        form = EnrolledDeviceForm(request.POST)
+        if form.is_valid():
+            enrolled_device = form.save(commit=False)
+            enrolled_device.location = location
+            enrolled_device.save()
+            messages.success(request, 'Device added successfully.')
+            return redirect('customer:service_locations')
+    else:
+        form = EnrolledDeviceForm()
+
+    return render(request, 'device/add_device.html', {'form': form, 'location': location})
+
+def delete_device(request, device_id):
+    enrolled_device = get_object_or_404(EnrolledDevice, pk=device_id, location__user=request.user)
+    if request.method == 'POST':
+        enrolled_device.delete()
+        messages.success(request, 'Device deleted successfully.')
+        return redirect('customer:service_locations')
+    return render(request, 'device/delete_device.html', {'enrolled_device': enrolled_device})
+
