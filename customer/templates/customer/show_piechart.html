@@ -1,0 +1,41 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block content %}
+    <h2>Polar Area Chart Example</h2>
+
+<div style="max-width: 600px; margin: auto;">
+    <canvas id="polarAreaChart"></canvas>
+</div>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('polarAreaChart').getContext('2d');
+
+    var data = {
+        datasets: [{
+            data: [10, 20, 30, 40, 50],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(255, 205, 86, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+            ],
+            label: 'Polar Area Chart'
+        }],
+        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5']
+    };
+
+    var options = {
+        maintainAspectRatio: false,
+        responsive: true,
+    };
+
+    var polarAreaChart = new Chart(ctx, {
+        type: 'polarArea',
+        data: data,
+        options: options
+    });
+</script>
+
+
+{% endblock content %}
