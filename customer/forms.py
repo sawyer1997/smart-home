@@ -15,8 +15,10 @@ class SignUpForm(UserCreationForm):
         }
         fields = ('first_name', 'last_name', 'email', 'username', 'password1', 'password2')
 
+
 class DateInput(forms.DateInput):
     input_type = 'date'
+
 
 class ServiceLocationForm(forms.ModelForm):
     class Meta:
