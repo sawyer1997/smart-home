@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 import random
 
 from django.shortcuts import render, redirect
@@ -70,28 +70,29 @@ def view_profile(request):
 
 @login_required
 def service_locations(request):
-    # TODO change it to native SQL
-    locations = ServiceLocation.objects.filter(
-        user=request.user,
-        is_active=True,
-        )
+    sql_query = (
+        f"SELECT * FROM customer_servicelocation "
+        f"WHERE user_id = {request.user.id} AND is_active = 't'"
+    )
+    locations = ServiceLocation.objects.raw(sql_query)
     return render(request, 'customer/service_locations.html', {'locations': locations})
 
 
+@require_http_methods(['POST'])
 @login_required
 def add_service_location(request):
-    if request.method == 'POST':
-        form = ServiceLocationForm(request.POST)
-        if form.is_valid():
-            service_location = form.save(commit=False)
-            service_location.user = request.user
-            service_location.save()
-            return redirect('customer:service_locations')
+    form = ServiceLocationForm(request.POST)
+    if form.is_valid():
+        service_location = form.save(commit=False)
+        service_location.user = request.user
+        service_location.save()
+        return redirect('customer:service_locations')
     else:
         form = ServiceLocationForm()
     return render(request, 'customer/add_service_location.html', {'form': form})
 
 
+@require_http_methods(['POST'])
 @login_required
 def delete_service_location(request, location_id):
     location = get_object_or_404(ServiceLocation, pk=location_id, user=request.user)
