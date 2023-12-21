@@ -28,6 +28,10 @@
                            class="btn btn-outline-info">View Energy Usage </a>
                     </div>
                     <div class="mb-1">
+                        <a href="{% url 'device:get_device_pie' location.id %}"
+                           class="btn btn-outline-info">View Pie Energy Usage</a>
+                    </div>
+                    <div class="mb-1">
                         <a href="{% url 'device:get_devices' location_id=location.id %}" class="btn btn-outline-primary">View Devices Installed</a>
                     </div>
                     <div class="mb-1">

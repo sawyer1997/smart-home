@@ -1,32 +1,37 @@
 {% extends 'customer/base.html' %}
 {% load static %}
 {% block content %}
-    <h2>Polar Area Chart Example</h2>
-    <div style="width: 80%; margin: auto;">
-        <canvas id="polarChart"></canvas>
+    <h2>Combined Chart Example</h2>
+    <div>
+        <canvas id="combinedChart"></canvas>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Get data from Django context
         var labels = {{ labels|safe }};
-        var values = {{ values|safe }};
+        var bar_values = {{ bar_values|safe }};
+        var line_values = {{ line_values|safe }};
 
         // Generate dynamic background colors
-        var backgroundColors = generateRandomColors(values.length);
+        var backgroundColors = generateRandomColors(bar_values.length);
 
         // Create a polar chart
-        var ctx = document.getElementById('polarChart').getContext('2d');
-        var polarChart = new Chart(ctx, {
-            type: 'polarArea',
+        var ctx = document.getElementById('combinedChart').getContext('2d');
+        var combinedChart = new Chart(ctx, {
             data: {
-                labels: labels,
                 datasets: [{
-                    data: values,
+                    type: 'bar',
+                    label: 'Daily Prices',
+                    data: bar_values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                }, {
+                    type: 'line',
+                    label: 'Moving Average Prices',
+                    data: line_values,
                     backgroundColor: backgroundColors,
                 }],
+                labels: labels
             },
         });
-
         // Function to generate random background colors
         function generateRandomColors(count) {
             var colors = [];
@@ -46,6 +51,5 @@
             return color;
         }
     </script>
-
 
 {% endblock content %}
