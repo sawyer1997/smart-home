@@ -108,7 +108,7 @@ def show_service_location_eusage(request, location_id):
         )
         timestamps_dict = {}
         for enrolled_device in enrolled_devices:
-            timestamps, energy_usages = get_eusage_of_device(enrolled_device.id, start_date, end_date)
+            timestamps, energy_usages = get_eusage_of_device(enrolled_device.id, start_date, end_date, cumulative)
             for ind, timestamp in enumerate(timestamps):
                 if timestamp not in timestamps_dict:
                     timestamps_dict[timestamp] = 0
