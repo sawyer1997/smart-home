@@ -20,13 +20,14 @@ class DeviceModel(models.Model):
     )
 
     def __str__(self):
-        return f'{self.model_name}_{self.device_type}_{self.id}'
+        return f'{self.device_type} -- {self.model_name}'
 
 
 class EnrolledDevice(models.Model):
 
     location = models.ForeignKey(ServiceLocation, on_delete=models.CASCADE)
     device_model = models.ForeignKey(DeviceModel, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{str(self.location)}_{str(self.device_model)}'

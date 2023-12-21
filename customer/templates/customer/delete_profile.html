@@ -1,0 +1,8 @@
+{% extends 'customer/base.html' %}
+{% block content %}
+    <p>Are you sure you want to <strong>delete this account ?</strong></p>
+    <form method="post">
+        {% csrf_token %}
+        <input class="btn btn-outline-danger" type="submit" value="Confirm" />
+    </form>
+{% endblock content %}

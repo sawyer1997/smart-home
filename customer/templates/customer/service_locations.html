@@ -1,66 +1,52 @@
 {% extends 'customer/base.html' %}
+{% load static %}
 {% block content %}
-  <h2>Your Service Locations</h2>
-  <form action="{% url 'customer:add_service_location' %}" method="get">
-    <button type="submit">Add New Service Location</button>
-  </form>
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert {{ message.tags }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-  <div>
-    {% for location in locations %}
-      <div class="location-entry">
-        <p><strong>Apt Unit:</strong> {{ location.apt_unit }}</p>
-        <p><strong>Street Name:</strong> {{ location.street }}</p>
-        <p><strong>State Name:</strong> {{ location.state }}</p>
-        <p><strong>Zip Code:</strong> {{ location.zipcode }}</p>
-        <p><strong>Apt Name:</strong> {{ location.apt_name }}</p>
-        <p><strong>Move-In Date:</strong> {{ location.move_in_date|date:"Y-m-d" }}</p>
-        <p><strong>Square Footage:</strong> {{ location.area }}</p>
-        <p><strong>No. of Bedrooms:</strong> {{ location.bedroom }}</p>
-        <p><strong>No. of Occupants:</strong> {{ location.occupants }}</p>
-
-        <!-- Add Devices Button -->
-        <form action="{% url 'device:add_device' location.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Add Devices</button>
-        </form>
-
-        <!-- List of Enrolled Devices -->
-        <ul>
-          {% for device in location.enrolleddevice_set.all %}
-            <li>
-              {{ device.device_model.model_name }} - {{ device.device_model.device_type }}
-              <!-- Delete Device Form -->
-              <form action="{% url 'device:delete_device' device.id %}" method="post" 
-                    onsubmit="return confirm('Are you sure you want to delete this device?');">
-                {% csrf_token %}
-                <button type="submit">Delete Device</button>
-              </form>
-            </li>
-          {% empty %}
-            <li>No devices enrolled yet.</li>
-          {% endfor %}
-        </ul>
-
-        <!-- Delete Service Location Form -->
-        <form action="{% url 'customer:delete_service_location' location.id %}" method="post" onsubmit="return confirmDelete();">
-          {% csrf_token %}
-          <button type="submit">Delete Service Location</button>
-        </form>
-      </div>
-    {% empty %}
-      <p>No locations added yet.</p>
-    {% endfor %}
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col">
+                <h1>Service Location Details</h1>
+            </div>
+        </div>
+        <div class="row-gap-3 mt-3">
+        <div class="col-md-5">
+            <div class="card my-3">
+                <img class="card-img-top" src="{% static 'customer/site_images/fancy-house-card.jpeg' %}"
+                     alt="House image"
+                     style="max-height: 250px"
+                >
+                <div class="card-body">
+                    <div class="card-title">
+                        <h3 class = "fw-bold">{{ location.apt_unit }} {{ location.street }}, {{ location.zipcode }}</h3>
+                    </div>
+                    <h5>Move-in-date: {{ location.move_in_date|date:"Y-m-d" }}</h5>
+                    <h5><strong>Area:</strong> {{ location.area }}</h5>
+                    <h5><strong>Bedrooms:</strong> {{ location.bedroom }}</h5>
+                    <h5><strong>Occupants:</strong> {{ location.occupants }}</h5>
+                    <br>
+                    <div class="mb-1">
+                        <a href="{% url 'device:show_sl_eusage' location_id=location.id %}"
+                           class="btn btn-outline-info">View Energy Usage </a>
+                    </div>
+                    <div class="mb-1">
+                        <a href="{% url 'device:get_devices' location_id=location.id %}" class="btn btn-outline-primary">View Devices Installed</a>
+                    </div>
+                    <div class="mb-1">
+                        <form action="{% url 'device:add_device' location_id=location.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-primary" type="submit">Add Devices</button>
+                        </form>
+                    </div>
+                    <div class="mb-1">
+                        <a href="{% url 'customer:update_service_location' location_id=location.id %}"
+                           class="btn btn-outline-info">Edit Service Location</a>
+                    </div>
+                    <div class="mb-1">
+                        <a href="{% url 'customer:delete_service_location' location_id=location.id %}"
+                           class="btn btn-outline-danger">Delete Service Location</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
-
-  <script>
-    function confirmDelete() {
-      return confirm('Do you want to delete this service location?');
-    }
-  </script>
 {% endblock %}

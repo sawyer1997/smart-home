@@ -1,0 +1,52 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container">
+        {% if locations %}
+            <div class="row mt-3">
+                <div class="col">
+                    <h1>Your Service Locations</h1>
+                </div>
+            </div>
+            <div class="row justify-content-start">
+                {% for location in locations %}
+                    <div class="card my-5">
+                        <img class="card-img-top" src="{% static 'customer/site_images/smart_home_card.png' %}"
+                             alt="Vacation image"
+                             style="max-height: 200px; max-width: 100px">
+                        <div class="card-body">
+                            <h5 class="card-title ">Service Location</h5>
+                            <p class="card-text fw-bold">
+                                {{ location.apt_unit }} {{ location.street }}, {{ location.zipcode }}
+                            </p>
+                            <form action="{% url 'customer:detailed_service_locations' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="location_id" value="{{ location.id }}">
+                                <button type="submit" class="btn btn-outline-info">
+                                    View Detailed Service Locations
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+                 <div class="mt-5">
+                    <a href="{% url 'customer:add_service_location' %}" class="btn btn-outline-primary">
+                        Add New Service Location
+                    </a>
+                 </div>
+            </div>
+        {% else %}
+            <div class="row mt-lg-5 mt-6">
+                <img src="{% static 'customer/site_images/smart_home.jpeg' %}" style="max-height: 50%; max-width: 50%">
+                <div class="col">
+                    <h3>Please Add Service Locations to track electricity usages!</h3>
+                    <div class="mt-5">
+                        <a href="{% url 'customer:add_service_location' %}" class="btn btn-outline-success">
+                            Add New Service Location
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}
