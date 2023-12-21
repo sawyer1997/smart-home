@@ -80,3 +80,42 @@ class EnergyUsageForm(forms.Form):
             })
         }
 
+
+CHOICES = [
+    ('11213', '11213'),
+    ('08619', '08619'),
+]
+
+
+class ZipCodePrice(forms.Form):
+    zipcode = forms.ChoiceField(choices=CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+    start_date = forms.DateField(
+        label='Start Date',
+        widget=DateInput()
+    )
+    end_date = forms.DateField(
+        label='End Date',
+        widget=DateInput()
+    )
+    cumulative = forms.BooleanField(
+        label='Cumulative',
+        required=False
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        if start_date >= end_date:
+            raise forms.ValidationError('Start date cannot be greater than equal to end date')
+
+        return cleaned_data
+
+    class Meta:
+        fields = ['start_date', 'end_date', 'cumulative']
+        widgets = {
+            'cumulative': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            })
+        }

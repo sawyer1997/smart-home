@@ -2,8 +2,8 @@
 {% load static %}
 {% block content %}
     <h2>Line Chart</h2>
-    <div class="col-5">
-        <canvas id="lineChart" width="200" height="100"></canvas>
+    <div style="width: 80%; margin: auto;">
+        <canvas id="lineChart"></canvas>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -35,19 +35,39 @@
                 }
             }
         {% endif %}
+        var labels = {{ labels|safe }};
+        var values = {{ values|safe }};
+        var backgroundColors = generateRandomColors(values.length);
         var chart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: {{ labels|safe }},
+                labels: labels,
                 datasets: [{
-                    label: 'Values',
-                    data: {{ values|safe }},
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    label: 'Energy Usage',
+                    data: values,
+                    backgroundColor: backgroundColors,
                     borderWidth: 1
                 }]
             },
             options: chartOptions
         });
+        // Function to generate random background colors
+        function generateRandomColors(count) {
+            var colors = [];
+            for (var i = 0; i < count; i++) {
+                colors.push(getRandomColor());
+            }
+            return colors;
+        }
+
+        // Function to generate a random color
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
     </script>
 {% endblock content %}

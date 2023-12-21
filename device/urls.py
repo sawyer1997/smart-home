@@ -14,4 +14,8 @@ urlpatterns = [
     path('show_sl_eusage/<int:location_id>/', views.show_service_location_eusage, name='show_sl_eusage'),
 
     path('get_devices/<int:location_id>/', views.get_devices, name='get_devices'),
+
+    path('get_device_pie/<int:location_id>/', views.get_device_pie, name="get_device_pie"),
+
+    path('get_prices/', views.get_prices, name='get_prices'),
 ]

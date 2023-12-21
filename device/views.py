@@ -3,13 +3,12 @@ from datetime import datetime, time
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.views.decorators.http import require_http_methods
-from .models import EnrolledDevice
+from .models import EnrolledDevice, EnergyPrice
 from customer.models import ServiceLocation
 from .utils import get_eusage_of_device
 from .repository import get_query
 from .forms import EnrolledDeviceForm
-from customer.forms import EnergyUsageForm
+from customer.forms import EnergyUsageForm, ZipCodePrice
 
 
 @login_required
@@ -198,3 +197,79 @@ def get_devices(request, location_id):
                   {'enrolled_devices': enrolled_devices,
                    'location_id': location_id}
                   )
+
+
+@login_required
+def get_device_pie(request, location_id):
+    if request.method == "POST":
+        eusage_form = EnergyUsageForm(request.POST)
+
+        if not eusage_form.is_valid():
+            messages.error(request, "Please enter valid data")
+            return render(request, 'customer/show_stats.html',
+                          {"eusage_form": EnergyUsageForm()})
+
+        user_eusage = eusage_form.cleaned_data
+        start_date = datetime.combine(user_eusage['start_date'], time(0, 0, 0))
+        end_date = datetime.combine(user_eusage['end_date'], time(23, 59, 59))
+        enrolled_devices = EnrolledDevice.objects.filter(location_id=location_id)
+
+        final_value = []
+        final_label = []
+        for enrolled_device in enrolled_devices:
+            _, values = get_eusage_of_device(enrolled_device.id, start_date, end_date, True)
+            if len(values):
+                final_value.append(values[-1])
+                final_label.append(str(enrolled_device.device_model))
+
+        return render(request, 'customer/show_piechart.html',
+                      {'labels': final_label, 'values': final_value})
+
+    return render(request, 'customer/show_stats.html', {
+        'stats': 'Pie Energy Stats',
+        'eusage_form': EnergyUsageForm()
+    })
+
+
+@login_required
+def get_prices(request):
+    if request.method == "POST":
+        eusage_form = ZipCodePrice(request.POST)
+        if not eusage_form.is_valid():
+            messages.error(request, "Please enter valid data")
+            return render(request, 'customer/show_stats.html',
+                          {"eusage_form": EnergyUsageForm()})
+
+        prices_form = eusage_form.cleaned_data
+        start_date = datetime.combine(prices_form['start_date'], time(0, 0, 0))
+        end_date = datetime.combine(prices_form['end_date'], time(23, 59, 59))
+        zipcode = prices_form['zipcode']
+
+        prices = EnergyPrice.objects.filter(
+            zipcode=zipcode,
+            time_stamp__gte=start_date.strftime('%Y-%m-%d %H:%M:%S'),
+            time_stamp__lte=end_date.strftime('%Y-%m-%d %H:%M:%S')
+        )
+        timestamps, daily_prices = [], []
+        moving_averages = []
+        timestamps_dict = {}
+        for price in prices:
+            date_str = price.time_stamp.strftime('%Y-%m-%d')
+            if timestamps_dict.get(date_str) is None:
+                timestamps_dict[date_str] = []
+            timestamps_dict[date_str].append(price.price_per_unit)
+        for date_str in timestamps_dict:
+            daily_prices.append(sum(timestamps_dict[date_str]) / len(timestamps_dict[date_str]))
+            moving_averages.append(sum(daily_prices) / len(daily_prices))
+            timestamps.append(date_str)
+        print(f'{timestamps = }, {daily_prices = }, {moving_averages = }')
+        return render(request, 'customer/combined_chart.html', {
+            'labels': timestamps,
+            'bar_values': daily_prices,
+            'line_values': moving_averages,
+        })
+
+    return render(request, 'customer/show_stats.html', {
+        'stats': 'Price Prices Stats',
+        'eusage_form': ZipCodePrice(),
+    })
