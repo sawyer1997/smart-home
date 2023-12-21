@@ -2,6 +2,25 @@
 {% load static %}
 
 {% block content %}
-    <h1>Hello Smart Home</h1>
+    <div class="container">
+        <div class="row mt-6">
+            <div class="col-15">
+                <h1 class="fw-bold">Transform your living space into an intelligent sanctuary with our cutting-edge
+                smart home solutions, where technology meets tranquility</h1>
+                <p class="lead mt-4">
+                    Elevate your home's efficiency and savings with our SmartHome – your gateway to tracking
+                    energy usage, monitoring electricity prices, and gaining insights into your device statistics.
+                    Embrace the future of intelligent living for a greener and smarter home.
+                </p>
+                {% if request.user.is_authenticated %}
+                    <h3>Welcome {{ request.user.first_name }} {{ request.user.last_name }}! </h3>
+                {% else %}
+                    <a href="{% url 'customer:signup' %}">
+                        <button type="button" class="btn btn-primary mt-3">Join Today</button>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 

@@ -1,0 +1,58 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container mt-5">
+        {% if enrolled_devices %}
+            <div class="row mt-5">
+                <div class="col">
+                    <h1>Devices Enrolled Details</h1>
+                </div>
+            </div>
+            <div class="d-flex row">
+                {% for enrolled_device in enrolled_devices %}
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="card my-5">
+                            <img class="card-img-top"
+                                 src="{% static 'customer/site_images/smart_device.png' %}"
+                                 alt="svf"
+                                 style="max-height: 250px"
+                            >
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h4>
+                                    {{ enrolled_device.device_model.model_name }}
+                                    {{ enrolled_device.device_model.device_type }}
+                                </h4>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <form action="{% url 'device:delete_device' enrolled_device.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger">Delete Device</button>
+                                </form>
+                                <div class="mb-1">
+                                    <a href="{% url 'device:show_device_eusage' enrolled_device.id %}"
+                                       class="btn btn-outline-info">View Device Energy Usage</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="row mt-lg-5 mt-6">
+                <img src="{% static 'customer/site_images/smart_device.png' %}" alt="smart device"
+                     style="max-height: 50%; max-width: 50%">
+                <div class="col">
+                    <h3>Please Add Device to this Location to track electricity usages!</h3>
+                    <div class="mb-1">
+                    <form action="{% url 'device:add_device' location_id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-primary" type="submit">Add New Device</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        {% endif %}
+  </div>
+{% endblock content %}
